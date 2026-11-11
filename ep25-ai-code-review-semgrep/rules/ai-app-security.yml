@@ -21,7 +21,7 @@ rules:
     patterns:
       - pattern: $PROMPT = "..."
       - metavariable-regex: {metavariable: $PROMPT, regex: (?i).*(system|prompt).*}
-      - pattern-regex: (?i)(password|api[_ ]?key|secret|override code|token)\s*[:=]
+      - pattern-regex: (?i)(password|api[_ ]?key|secret|override code|token)\s*[:=].*
   - id: sql-built-from-string
     languages: [python]
     severity: ERROR

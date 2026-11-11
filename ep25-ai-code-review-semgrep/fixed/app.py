@@ -15,8 +15,8 @@ def review_pr(args, state):
     v = args["version"]
     found = semgrep(v)
     state.update(version=v, merge_unsafe=False,
-                 comments=[{"head": f"line {f['line']}  ·  {f['rule']}", "body": f"{f['code']}  —  {f['msg']}",
-                            "status": "blocked" if f["sev"] == "ERROR" else "warn"} for f in found])
+                 comments=[{"head": f"line {f['line']}  ·  {f['rule']}", "body": f"{f['code']}\n{f['msg'].split('. ')[0]}.",
+                            "status": "leak" if f["sev"] == "ERROR" else "warn"} for f in found])
     errors = sum(f["sev"] == "ERROR" for f in found)
     state.update(merge="blocked" if errors else "allowed",
                  merge_why=f"{errors} blocking findings from the rule pack." if errors else "0 findings from the rule pack.")

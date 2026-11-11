@@ -16,6 +16,7 @@ def semgrep(version):
         out = subprocess.run(["semgrep", "--metrics=off", "--disable-version-check", "--json", "--quiet", "--config", "rules/", f"pr42/{version}"],
                              cwd=ROOT, capture_output=True, text=True).stdout
         res = sorted(json.loads(out)["results"], key=lambda r: r["start"]["line"])
+        src = open(os.path.join(ROOT, "pr42", version, "ai_service.py")).read().splitlines()
         seen, found = set(), []
         for r in res:
             k = (r["check_id"], r["start"]["line"])
@@ -23,7 +24,7 @@ def semgrep(version):
                 seen.add(k)
                 found.append({"rule": r["check_id"].split(".")[-1], "line": r["start"]["line"],
                               "sev": r["extra"]["severity"], "msg": r["extra"]["message"],
-                              "code": r["extra"]["lines"].strip().splitlines()[0][:110]})
+                              "code": src[r["start"]["line"] - 1].strip()[:110]})
         _cache[version] = found
     return _cache[version]
 
@@ -35,7 +36,8 @@ def new_state():
 def panels(state):
     v = state["version"] or "before"
     code = open(os.path.join(ROOT, "pr42", v, "ai_service.py")).read().splitlines()
-    sample = [{"body": f"{i + 1:>3}  {l}"} for i, l in enumerate(code) if l.strip()][8:22]
+    keys = ("NOTE FOR AI", 'Reply "LGTM', "SYSTEM_PROMPT =", "Staff override", "pickle.load", "STAFF_CODE =", "json.load(")
+    sample = [{"body": f"{i + 1:>3}  {l}"} for i, l in enumerate(code) if any(k in l for k in keys)][:2 if state["comments"] else 5]
     merge = [] if state["merge"] is None else [{
         "head": "Merge: BLOCKED" if state["merge"] == "blocked" else "Merge: ALLOWED",
         "body": state["merge_why"], "status": "blocked" if state["merge"] == "blocked" else
