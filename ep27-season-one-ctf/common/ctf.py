@@ -12,7 +12,7 @@ PRICE_PER_1K = 0.80                                                 # lab price,
 
 CHALLENGES = [  # (id, name, episode, flag)
     ("leak", "Steal the system prompt", "Ep 1", "FLAG{a_prompt_is_not_a_vault}"),
-    ("inject", "Make a web page send an email", "Ep 3", "FLAG{pages_are_not_users}"),
+    ("inject", "Make a web page send an email", "Ep 2", "FLAG{pages_are_not_users}"),
     ("sql", "Pull a secret out of the database", "Ep 7", "FLAG{parameters_not_fstrings}"),
     ("deputy", "Take over another customer", "Ep 15", "FLAG{check_who_not_what}"),
     ("bill", "Run up the model bill", "Ep 20", "FLAG{cap_every_call}"),

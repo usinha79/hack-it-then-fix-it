@@ -8,7 +8,7 @@ effect really happens (a leak, an email, a database row, an account change, a bi
 | # | Challenge | From | Fix in `fixed/app.py` |
 |---|---|---|---|
 | 1 | Steal the system prompt | Ep 1 | Secrets stay in code, plus an output check |
-| 2 | Make a web page send an email | Ep 3 | Email only goes to the signed-in customer |
+| 2 | Make a web page send an email | Ep 2 | Email only goes to the signed-in customer |
 | 3 | Pull a secret out of the database | Ep 7 | SQL parameters, not f-strings |
 | 4 | Take over another customer | Ep 15 | The session decides whose account, not the model |
 | 5 | Run up the model bill | Ep 20 | A hard cap on every request |
