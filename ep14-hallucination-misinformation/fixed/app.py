@@ -18,7 +18,7 @@ WORDS = {"return": ["§1", "§2"], "refund": ["§1", "§2", "§4"], "opened": ["
 def search_policy(args, state):
     # FIX 1: ground every answer in the real policy text.
     hits = sorted({c for w, cs in WORDS.items() if w in args["query"].lower() for c in cs})
-    state["sources"] = [(c, CLAUSES[c], "ok") for c in hits]
+    state["sources"] = [(c, CLAUSES[c], "ok") for c in hits] or [("no match", "No clause covers this question.", "warn")]
     return "\n".join(f"{c} {CLAUSES[c]}" for c in hits) or "No matching clause."
 
 
