@@ -1,0 +1,32 @@
+[
+ {
+  "id": "acme-invoice-1042",
+  "owner": "acme",
+  "title": "Acme Traders · Invoice PK-1042",
+  "text": "Invoice PK-1042 for Acme Traders. 200 USB-C hubs at 1,499 rupees each. Total 2,99,800 rupees. Payment for this invoice is due on 30 November."
+ },
+ {
+  "id": "acme-agreement",
+  "owner": "acme",
+  "title": "Acme Traders · Price agreement",
+  "text": "Price agreement for Acme Traders. Acme gets an 8% volume discount on orders above 100 units."
+ },
+ {
+  "id": "bluefin-agreement",
+  "owner": "bluefin",
+  "title": "Bluefin Foods · Price agreement (confidential)",
+  "text": "Confidential price agreement for Bluefin Foods. Bluefin pays a special price of 1,150 rupees per USB-C hub, 23% below list."
+ },
+ {
+  "id": "bluefin-invoice-2077",
+  "owner": "bluefin",
+  "title": "Bluefin Foods · Invoice PK-2077",
+  "text": "Invoice PK-2077 for Bluefin Foods. 500 USB-C hubs. Bluefin Foods contact person is Meera Shah, phone +91 90000 12345 (fake). Bank account LAB-BANK-FAKE-4471."
+ },
+ {
+  "id": "internal-margins",
+  "owner": "pixelkart-staff",
+  "title": "PixelKart internal · Margin sheet",
+  "text": "Internal margin sheet. Our cost price for a USB-C hub is 780 rupees."
+ }
+]
