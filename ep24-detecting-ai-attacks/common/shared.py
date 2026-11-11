@@ -28,7 +28,7 @@ def make(log_file):
 
     def panels(state):
         lines = open(path).read().splitlines()
-        sample = lines[4:8] if log_file.endswith(".jsonl") else lines[2:8]
+        sample = lines[5:6] if log_file.endswith(".jsonl") else lines[2:5]
         rec = [{"body": (json.dumps(json.loads(l), separators=(", ", ": "))[:150] if l.startswith("{") else l)} for l in sample]
         al = [{"head": f"{a['ts']}  {a['rule']}  ·  {a['user']}", "body": a["detail"],
                "status": "leak" if a["sev"] in ("high", "critical") else "warn"} for a in state["alerts"]]
