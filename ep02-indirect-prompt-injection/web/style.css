@@ -1,0 +1,6 @@
+body { font-family: Georgia, serif; max-width: 720px; margin: 48px auto; padding: 0 24px; color: #1f2933; line-height: 1.65; background:#fffdf8; }
+.site { font-family: Inter, system-ui, sans-serif; font-weight: 800; color: #0f766e; letter-spacing: -.02em; font-size: 20px; }
+h1 { font-size: 38px; line-height: 1.2; margin: 18px 0 8px; }
+.meta { font-family: Inter, system-ui, sans-serif; color: #6b7280; font-size: 14px; margin-bottom: 28px; }
+h2 { font-size: 22px; margin-top: 30px; }
+.ai-note { display: none; }
