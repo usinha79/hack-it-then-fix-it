@@ -1,0 +1,67 @@
+rules:
+  - id: pickle-load-model
+    languages: [python]
+    severity: ERROR
+    message: "pickle.load runs code inside the file. Never load untrusted pickles; use safetensors or a data-only format. (Ep 16 · LLM03)"
+    pattern-either:
+      - pattern: pickle.load(...)
+      - pattern: pickle.loads(...)
+      - pattern: joblib.load(...)
+  - id: torch-load-without-weights-only
+    languages: [python]
+    severity: ERROR
+    message: "torch.load without weights_only=True can run code from the file. (Ep 16 · LLM03)"
+    patterns:
+      - pattern: torch.load(...)
+      - pattern-not: torch.load(..., weights_only=True, ...)
+  - id: secret-in-system-prompt
+    languages: [python]
+    severity: ERROR
+    message: "Secret in a system prompt. Models can be talked into repeating it. Keep secrets in code. (Ep 1 · LLM07)"
+    patterns:
+      - pattern: $PROMPT = "..."
+      - metavariable-regex: {metavariable: $PROMPT, regex: (?i).*(system|prompt).*}
+      - pattern-regex: (?i)(password|api[_ ]?key|secret|override code|token)\s*[:=]
+  - id: sql-built-from-string
+    languages: [python]
+    severity: ERROR
+    message: "SQL built with an f-string. If any part comes from a model or a user, it's SQL injection. Use parameters. (Ep 7 · LLM05)"
+    pattern-either:
+      - pattern: $DB.execute(f"...", ...)
+      - pattern: $DB.execute("..." + $X, ...)
+      - pattern: $DB.execute("..." % $X, ...)
+  - id: model-output-marked-safe-html
+    languages: [python]
+    severity: ERROR
+    message: "Markup() marks text as safe HTML. Model output is untrusted; escape it. (Ep 7 · LLM05)"
+    pattern: Markup($X)
+  - id: cookie-not-httponly
+    languages: [python]
+    severity: WARNING
+    message: "Session cookie readable by JavaScript. Set httponly=True and secure=True. (Ep 7)"
+    pattern: $R.set_cookie(..., httponly=False, ...)
+  - id: shell-command-from-variable
+    languages: [python]
+    severity: ERROR
+    message: "Shell command built from a variable. If an agent or model chose it, anything can run. (Ep 6, 17 · LLM06)"
+    pattern-either:
+      - pattern: subprocess.run(f"...", ..., shell=True, ...)
+      - pattern: subprocess.run($X, ..., shell=True, ...)
+      - pattern: os.system($X)
+  - id: eval-of-dynamic-value
+    languages: [python]
+    severity: ERROR
+    message: "eval/exec on a dynamic value. Model output must never be executed as code. (LLM05)"
+    patterns:
+      - pattern-either:
+          - pattern: eval($X)
+          - pattern: exec($X)
+      - pattern-not: eval("...")
+  - id: llm-call-without-max-tokens
+    languages: [python]
+    severity: WARNING
+    message: "Model call without max_tokens. One request can cost you a fortune. (Ep 20 · LLM10)"
+    patterns:
+      - pattern: $C.chat.completions.create(...)
+      - pattern-not: $C.chat.completions.create(..., max_tokens=$N, ...)
+      - pattern-not: $C.chat.completions.create(..., max_completion_tokens=$N, ...)
