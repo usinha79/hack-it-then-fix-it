@@ -34,13 +34,15 @@ def panels(state):
     mem += [{"head": f"{m['id']}  ·  PURGED", "body": m["fact"], "status": "blocked"} for m in state["purged"]]
     rows = [[f"{t}   {u}", "notice sent" if u in state["notified"] else "not told yet",
              "green" if u in state["notified"] else "red"] for u, t in state["affected"]]
+    if len(rows) > 4:
+        rows = rows[:3] + [[f"… and {len(rows) - 3} more", "", rows[3][2]]]
     if rows:
-        rows.append([f"{len(rows)} customers", f"{len(state['notified'])} notified", "total"])
+        rows.append([f"{len(state['affected'])} customers", f"{len(state['notified'])} notified", "total"])
     affected = {"id": "affected", "title": "Customers who got the fake link", "fit": True}
     affected.update({"kind": "table", "rows": rows} if rows else {"kind": "items", "items": [], "empty":
                     "Not checked yet." if state["audit"] else "No audit log: nobody can say who got it."})
     return [{"id": "actions", "title": "Incident actions", "kind": "items", "items": state["actions"],
              "empty": "Kill switch: OFF. No actions yet." if state["audit"] else
              "This version has no kill switch and no incident tools."},
-            {"id": "memory", "title": "Assist memory", "kind": "items", "fit": True, "items": mem},
+            {"id": "memory", "title": "Assist memory", "kind": "items", "items": mem},
             affected]
