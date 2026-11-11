@@ -25,7 +25,7 @@ New episode **Monday to Saturday at 8 PM IST**.
 | 1 | One Message Made This AI Bot Give 100% Off | Direct prompt injection | Thu 12 Nov 2026 | [ep01](ep01-direct-prompt-injection/) |
 | 2 | A Hidden Web Page Made My AI Agent Email My Secrets | Indirect prompt injection | Fri 13 Nov 2026 | [ep02](ep02-indirect-prompt-injection/) |
 | 3 | My AI Agent Leaked Its Own Cloud Keys | Tool abuse / excessive agency | Sat 14 Nov 2026 | [ep03](ep03-tool-abuse/) |
-| 4 | An AI Chatbot Leaked Another Company's Data | RAG data leakage | Mon 16 Nov 2026 | [ep04](ep04-rag-data-leakage/) |
+| 4 | I Asked an AI Chatbot One Question and It Leaked a Rival's Secret Price | RAG data leakage | Mon 16 Nov 2026 | [ep04](ep04-rag-data-leakage/) |
 | 5 | I Hacked an MCP Server With No Login, Then Fixed It | MCP server security | Tue 17 Nov 2026 | [ep05](ep05-mcp-server-auth/) |
 | 6 | This AGENTS.md File Stole My Secrets | AI coding agent security | Wed 18 Nov 2026 | [ep06](ep06-coding-agent-config-injection/) |
 | 7 | I Asked AI to Summarise Reviews. It Wrote an XSS Exploit | Insecure output handling | Thu 19 Nov 2026 | [ep07](ep07-insecure-output-handling/) |
