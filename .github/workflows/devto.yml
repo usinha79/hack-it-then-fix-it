@@ -1,0 +1,19 @@
+name: Publish articles to DEV
+
+on:
+  push:
+    branches: [main]
+    paths: ["articles/**"]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python .github/scripts/devto_publish.py
+        env:
+          DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
