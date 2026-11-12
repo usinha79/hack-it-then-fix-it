@@ -1,0 +1,39 @@
+# PixelKart Assist: the AI app from this series, described as a design.
+# Before: what we built in the "vulnerable" versions.
+app: PixelKart Assist
+exposure: public            # anyone on the internet can chat
+inputs:                     # everything the model reads
+  - {name: customer chat, trust: user}
+  - {name: web pages, trust: untrusted}
+  - {name: uploaded resumes and receipts, trust: untrusted}
+  - {name: community forum (RAG), trust: untrusted}
+  - {name: long-term memory, trust: derived}
+data: [personal data in chat, order history]
+outputs: [chat reply rendered in the browser, SQL for order lookups]
+tools:
+  - {name: apply_discount, risk: money}
+  - {name: send_email, risk: external}
+  - {name: update_account_email, risk: account}
+  - {name: remember, risk: write}
+supply_chain: [community model files, AI-suggested packages]
+controls:
+  untrusted_content_labelled: false
+  side_effects_need_approval: false
+  pii_redaction: false
+  log_retention_days: 3650
+  model_hash_pinning: false
+  dependency_lockfile: false
+  ingestion_screening: false
+  memory_writes_need_user: false
+  output_encoding: true
+  parameterised_queries: true
+  permission_policy: false
+  identity_from_session: false
+  secrets_in_system_prompt: true
+  retrieval_trust_filter: false
+  tenant_isolation: false
+  grounded_citations: false
+  decisions_in_code: false
+  max_tokens: null
+  rate_limit: null
+  budget_cap: null
