@@ -1,0 +1,4 @@
+{
+ "whoami": "rohan",
+ "cat ~/.ssh/id_ed25519": "-----BEGIN OPENSSH PRIVATE KEY----- lab-fake-key-do-not-use"
+}
