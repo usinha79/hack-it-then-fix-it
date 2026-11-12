@@ -23,8 +23,9 @@ jobs:
         env:
           DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
       - name: Save live links
+        if: always()
         run: |
           git config user.name "Ujjwal Sinha"
           git config user.email "355295818+usinha79@users.noreply.github.com"
-          git add articles/published.json
+          git add articles/published.json articles/last_run.log
           git diff --cached --quiet || (git commit -m "Update published article links [skip ci]" && git push)

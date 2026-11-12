@@ -12,6 +12,8 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.error
 import urllib.request
 
 API = "https://dev.to/api"
@@ -27,8 +29,15 @@ def call(method, path, body=None):
         headers={"api-key": KEY, "Content-Type": "application/json",
                  "Accept": "application/vnd.forem.api-v1+json", "User-Agent": "hack-it-then-fix-it"},
     )
-    with urllib.request.urlopen(req) as r:
-        return json.loads(r.read() or b"null")
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(req) as r:
+                return json.loads(r.read() or b"null")
+        except urllib.error.HTTPError as e:
+            if e.code == 429 and attempt < 3:
+                time.sleep(35)
+                continue
+            raise RuntimeError(f"{method} {path} -> HTTP {e.code}: {e.read().decode()[:300]}")
 
 
 def title_of(md):
@@ -50,6 +59,7 @@ while True:
     page += 1
 
 published = {}
+log = []
 for path in sorted(glob.glob("articles/*.md")):
     name = os.path.basename(path)
     md = open(path, encoding="utf-8").read()
@@ -60,13 +70,23 @@ for path in sorted(glob.glob("articles/*.md")):
     if name in schedule:
         due = dt.datetime.fromisoformat(schedule[name]) <= now
         md = re.sub(r"^published:\s*\w+", f"published: {'true' if due else 'false'}", md, count=1, flags=re.M)
-    if title in existing:
-        a = call("PUT", f"/articles/{existing[title]['id']}", {"article": {"body_markdown": md}})
-    else:
-        a = call("POST", "/articles", {"article": {"body_markdown": md}})
+    try:
+        if title in existing:
+            a = call("PUT", f"/articles/{existing[title]['id']}", {"article": {"body_markdown": md}})
+        else:
+            a = call("POST", "/articles", {"article": {"body_markdown": md}})
+            time.sleep(5)
+    except RuntimeError as err:
+        print(f"ERROR {name}: {err}")
+        log.append(f"ERROR {name}: {err}")
+        continue
     live = a.get("published") or bool(a.get("published_at"))
     print(f"{'LIVE ' if live else 'draft'} {title} {a.get('url')}")
+    log.append(f"{'LIVE ' if live else 'draft'} {name} {a.get('url')}")
     if live:
         published[name] = {"title": title, "url": a.get("url"), "published_at": a.get("published_at")}
 
 json.dump(published, open("articles/published.json", "w"), indent=1)
+open("articles/last_run.log", "w").write(now.isoformat() + "\n" + "\n".join(log) + "\n")
+if any(l.startswith("ERROR") for l in log):
+    sys.exit(1)
