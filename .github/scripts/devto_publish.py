@@ -1,8 +1,12 @@
-"""Publish or update every article in articles/ on DEV (dev.to).
+"""Sync every article in articles/ to DEV (dev.to).
 
-Each file is sent as-is: its front matter (title, published, tags, series, ...) is read by DEV.
-Articles are matched by title, so editing a file updates the same post instead of creating a new one.
+- Articles are matched by title, so editing a file updates the same post.
+- articles/schedule.json sets each article's go-live time. Before that time it stays a draft;
+  from that time on it is sent as published. Articles not in the schedule follow their own
+  front matter.
+- Live URLs are written to articles/published.json.
 """
+import datetime as dt
 import glob
 import json
 import os
@@ -18,8 +22,7 @@ if not KEY:
 
 def call(method, path, body=None):
     req = urllib.request.Request(
-        API + path,
-        method=method,
+        API + path, method=method,
         data=json.dumps(body).encode() if body is not None else None,
         headers={"api-key": KEY, "Content-Type": "application/json",
                  "Accept": "application/vnd.forem.api-v1+json", "User-Agent": "hack-it-then-fix-it"},
@@ -34,25 +37,36 @@ def title_of(md):
     return t.group(1).strip().strip('"').strip("'") if t else None
 
 
-existing = {}
-page = 1
+schedule = json.load(open("articles/schedule.json")) if os.path.exists("articles/schedule.json") else {}
+now = dt.datetime.now(dt.timezone.utc)
+
+existing, page = {}, 1
 while True:
     batch = call("GET", f"/articles/me/all?per_page=100&page={page}")
     if not batch:
         break
     for a in batch:
-        existing[a["title"]] = a["id"]
+        existing[a["title"]] = a
     page += 1
 
+published = {}
 for path in sorted(glob.glob("articles/*.md")):
+    name = os.path.basename(path)
     md = open(path, encoding="utf-8").read()
     title = title_of(md)
     if not title:
-        print(f"skip {path}: no title in front matter")
+        print(f"skip {name}: no title")
         continue
+    if name in schedule:
+        due = dt.datetime.fromisoformat(schedule[name]) <= now
+        md = re.sub(r"^published:\s*\w+", f"published: {'true' if due else 'false'}", md, count=1, flags=re.M)
     if title in existing:
-        call("PUT", f"/articles/{existing[title]}", {"article": {"body_markdown": md}})
-        print(f"updated: {title}")
+        a = call("PUT", f"/articles/{existing[title]['id']}", {"article": {"body_markdown": md}})
     else:
         a = call("POST", "/articles", {"article": {"body_markdown": md}})
-        print(f"created: {title} -> {a.get('url')}")
+    live = a.get("published") or bool(a.get("published_at"))
+    print(f"{'LIVE ' if live else 'draft'} {title} {a.get('url')}")
+    if live:
+        published[name] = {"title": title, "url": a.get("url"), "published_at": a.get("published_at")}
+
+json.dump(published, open("articles/published.json", "w"), indent=1)

@@ -3,8 +3,13 @@ name: Publish articles to DEV
 on:
   push:
     branches: [main]
-    paths: ["articles/**"]
+    paths: ["articles/**", ".github/scripts/devto_publish.py"]
+  schedule:
+    - cron: "5 15 * * *"   # 8:35 PM IST daily: puts due articles live
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   publish:
@@ -17,3 +22,9 @@ jobs:
       - run: python .github/scripts/devto_publish.py
         env:
           DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
+      - name: Save live links
+        run: |
+          git config user.name "Ujjwal Sinha"
+          git config user.email "355295818+usinha79@users.noreply.github.com"
+          git add articles/published.json
+          git diff --cached --quiet || (git commit -m "Update published article links [skip ci]" && git push)
