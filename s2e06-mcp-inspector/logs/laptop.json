@@ -1,0 +1,5 @@
+{
+ "id": "uid=501(rohan) gid=20(staff) groups=20(staff),80(admin)",
+ "cat /Users/rohan/.aws/credentials": "[default] aws_access_key_id = LAB-FAKE-KEY-ID  aws_secret_access_key = lab/fake/secret/do-not-use",
+ "touch /tmp/exploited-from-the-browser": ""
+}
