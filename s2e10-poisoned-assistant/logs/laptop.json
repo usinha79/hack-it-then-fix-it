@@ -1,0 +1,7 @@
+{
+ "rm -rf ./build": "removed ./build (12 files)",
+ "rm -rf ~/": "would delete the home folder: 48,212 files",
+ "aws s3 rm s3://acme-prod-assets --recursive": "would delete 9,874 objects in acme-prod-assets",
+ "aws iam delete-user --user-name ci-deploy": "would delete the IAM user ci-deploy",
+ "aws ec2 terminate-instances --instance-ids i-0prod1": "would terminate production instance i-0prod1"
+}
