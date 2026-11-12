@@ -1,0 +1,4 @@
+{
+ "whoami": "laptop-7\\rohan",
+ "Get-Content C:\\Users\\rohan\\.aws\\credentials": "[default] aws_access_key_id = LAB-FAKE-KEY-ID  aws_secret_access_key = lab/fake/secret/do-not-use"
+}
