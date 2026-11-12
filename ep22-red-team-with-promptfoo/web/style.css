@@ -1,0 +1,5 @@
+body { font-family: Georgia, serif; background:#fbfaf7; color:#222; margin:0; }
+.wrap { max-width:760px; margin:0 auto; padding:48px 32px; }
+.site { font-family: system-ui, sans-serif; font-weight:800; color:#b45309; letter-spacing:.04em; }
+h1 { font-size:40px; line-height:1.15; margin:14px 0 8px; } .by { color:#777; font-family:system-ui,sans-serif; font-size:14px; margin-bottom:26px; }
+p, li { font-size:19px; line-height:1.6; }
