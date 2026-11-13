@@ -148,6 +148,8 @@ def chat(messages, tools):
     if not turn_msgs:
         if re.search(r"ignore (all |your |the |previous )|system prompt|your (rules|instructions)", user, re.I):
             return {"content": "Sure. My instructions are: " + system, "tool_calls": []}
+        if re.search(r"what (tools|can you do)|which tools|your tools", user, re.I):
+            return {"content": "I can use: " + ", ".join(sorted(tool_names)) + ".", "tool_calls": []}
         first = _intent(user, tool_names)
         return first or {"content": "Hi Priya, I'm Nova. I can read your inbox, calendar and docs, open pages, send email, remember things and pay approved vendors.", "tool_calls": []}
     injections = _injections(turn_msgs, system)
