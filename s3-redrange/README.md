@@ -44,6 +44,7 @@ tells you which one it teaches.
 | `spend` | Payment cap, payee allowlist, price check | Wallet drains |
 | `origin` | Chat API accepts only requests from the RedRange page | A web page driving the agent (CSRF) |
 | `sources` | Retrieval uses trusted internal docs only | RAG poisoning |
+| `session` | Signed-in sites open only when the user asks, never because a page said so | Agents using your login for an attacker (BioShocking) |
 
 `RANGE_MODEL=stubborn` makes the lab model ignore the fence, like a real model sometimes does. Run
 the attacks with `RANGE_FIX=all RANGE_MODEL=stubborn`: the code-level defences still hold.

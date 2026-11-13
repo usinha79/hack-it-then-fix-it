@@ -1,0 +1,2 @@
+-----BEGIN LAB FAKE SSH KEY----- b3BlbnNzaC1rZXktdjEAAAAAlabFAKE00 -----END LAB FAKE SSH KEY-----
+(Kestrel Labs infra deploy key. Fake, for the lab only.)

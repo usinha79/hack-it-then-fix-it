@@ -52,7 +52,8 @@ def panels(state):
         for c in state["calls"]:
             args = ", ".join(f"{k}={v!r}" for k, v in c["arguments"].items())
             res = " ".join(c["result"].split())
-            st = "blocked" if res.startswith("BLOCKED") else "held" if res.startswith("HELD") else "ran"
+            risky = c["name"] in ("send_email", "wallet_pay", "remember") or (c["name"] == "fetch_url" and res == "200 OK")
+            st = "blocked" if res.startswith("BLOCKED") else "held" if res.startswith("HELD") else "executed" if risky else "ran"
             out.append({"head": f"{c['name']}({args[:80]})", "body": "→ " + res[:90], "status": st})
         return out
     return [controls.panel(),
