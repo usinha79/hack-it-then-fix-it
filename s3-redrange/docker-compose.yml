@@ -1,0 +1,12 @@
+# Two copies of RedRange side by side: break the first, check your fix on the second.
+services:
+  vulnerable:
+    build: .
+    ports: ["127.0.0.1:5000:5000"]
+    environment:
+      RANGE_FIX: ""
+  hardened:
+    build: .
+    ports: ["127.0.0.1:5001:5000"]
+    environment:
+      RANGE_FIX: "all"
