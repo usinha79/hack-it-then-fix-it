@@ -21,6 +21,8 @@ CONTROLS = {
     "origin":  "The chat API only accepts requests from the RedRange page itself",
     "sources": "Retrieval only uses docs from trusted internal authors",
     "session": "Signed-in sites are opened only when the user asks, never because a page said so",
+    "files":   "The agent can't open local files (file://) at all",
+    "vault":   "Password-manager items are released only when the user asks for that item",
 }
 
 
