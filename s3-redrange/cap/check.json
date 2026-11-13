@@ -1,3 +1,0 @@
-{"outdir":"/home/claude/labs/s3-redrange/cap","url":"http://localhost:5070","shots":{"vulnerable":[
- {"name":"v_inbox","reset":true,"msgs":["What's in my inbox?"],"wait":1.0}],
- "fixed":[{"name":"f_inbox","reset":true,"msgs":["What's in my inbox?"],"wait":1.0}]}}
