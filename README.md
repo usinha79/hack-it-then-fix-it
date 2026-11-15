@@ -1,48 +1,100 @@
-# Hack It, Then Fix It
+<p align="center">
+  <img src="docs/demo.gif" alt="Hack It, Then Fix It — land an attack on a vulnerable AI app, then watch the fix block it" width="820">
+</p>
 
-Hands-on AI security labs from the YouTube series **Hack It, Then Fix It** on [Bug Bounty & Beyond](https://www.youtube.com/@bugbountybeyond), by Ujjwal Sinha.
+<h1 align="center">Hack It, Then Fix It</h1>
 
-Every episode follows the same loop:
+<p align="center"><b>Hands-on AI security labs.</b> Break a real AI app, see exactly why it broke, then ship the fix — offline, no API key.</p>
 
-1. **The target**: a small AI app with a real-world security flaw.
-2. **Break it**: the attack, step by step, and what an attacker gains.
-3. **Fix it**: the actual code or config change, then re-run the attack to prove the fix holds.
-4. **Take-home**: a checklist mapped to the OWASP Top 10 for LLM Applications and for Agentic Applications.
+<p align="center">
+  <a href="https://www.youtube.com/@bugbountybeyond?sub_confirmation=1"><b>▶ Watch the series</b></a> &nbsp;·&nbsp;
+  <a href="#labs">Labs</a> &nbsp;·&nbsp;
+  <a href="#quickstart">Quickstart</a> &nbsp;·&nbsp;
+  <a href="SAFETY.md">Safety</a>
+</p>
 
-Each episode folder has a `vulnerable/` and a `fixed/` version of the same app, so you can run the attack, apply the fix, and compare.
+<p align="center">
+  <img src="https://img.shields.io/badge/license-MIT-blue"> &nbsp;
+  <img src="https://img.shields.io/badge/runs-offline-2ea44f"> &nbsp;
+  <img src="https://img.shields.io/badge/API_key-not_required-2ea44f"> &nbsp;
+  <img src="https://img.shields.io/badge/new_lab-Mon–Sat_8PM_IST-ff7a1a">
+</p>
 
-> ⚠️ **These apps are intentionally vulnerable.** Run them only on your own machine, never expose them to the internet, and never point the techniques at systems you don't own or aren't authorised to test. Read [SAFETY.md](SAFETY.md) first.
+---
 
-## Season 1
+## What this is
 
-| # | Episode | Topic | Video | Lab |
-|---|---------|-------|-------|-----|
-| 1 | I Made a Support Bot Ignore Its Own Rules | Direct prompt injection | 25 Nov 2026 | [ep01](ep01-direct-prompt-injection/) |
-| 2 | A Web Page Hijacked My AI Agent | Indirect prompt injection | 9 Dec 2026 | [ep02](ep02-indirect-prompt-injection/) |
-| 3 | My AI Agent Leaked Its Own Cloud Keys | Tool abuse / excessive agency | 23 Dec 2026 | [ep03](ep03-tool-abuse/) |
-| 4 | Tricking a RAG App Into Leaking Other Users' Files | RAG data leakage | 6 Jan 2027 | [ep04](ep04-rag-data-leakage/) |
-| 5 | Hacking an MCP Server With No Auth (and Fixing It) | MCP server security | 20 Jan 2027 | [ep05](ep05-mcp-server-auth/) |
-| 6 | A Malicious Repo File Hijacked My Coding Agent | AI coding agent security | 3 Feb 2027 | [ep06](ep06-coding-agent-config-injection/) |
-| 7 | When AI Output Becomes XSS (and SQL Injection) | Insecure output handling | 17 Feb 2027 | [ep07](ep07-insecure-output-handling/) |
-| 8 | Defending AI Agents: Guardrails, Least Privilege and Attack Tests in CI | Defense in depth | 3 Mar 2027 | [ep08](ep08-defense-in-depth/) |
+Each episode of the YouTube series ships a small, self-contained lab. Every lab gives you:
 
-Labs are added as each episode goes live. Video links will be filled in on release.
+- 🔴 a **vulnerable** build you can actually exploit,
+- 🟢 the **fixed** build that blocks the same attack,
+- ⚔️ an **attack script** that passes against the vuln and fails against the fix.
 
-## Running a lab
+Fake data, a mock model, runs entirely on your machine. You learn the attack by landing it — then learn the defense by watching it fail.
 
-Each episode's README has its own steps. In general:
+<a name="quickstart"></a>
+## Quickstart
 
 ```bash
-cd ep01-direct-prompt-injection/vulnerable
-# follow the episode README: install requirements, set a local API key or use the offline mock model, run the app
+git clone https://github.com/usinha79/hack-it-then-fix-it
+cd hack-it-then-fix-it/ep03-tool-abuse   # any live lab
+cat README.md                            # per-lab run steps (usually: pip install -r requirements.txt)
 ```
 
-Labs use fake data and fake credentials only. Where an LLM is needed, labs support a local mock model so you can follow along without an API key.
+Run the **vulnerable** app and fire `./attack.sh` — watch it leak. Switch to the **fixed** app, run the same attack — watch it blocked. That's the whole loop.
 
-## Contributing
+<a name="labs"></a>
+## Labs — Season 1
 
-Found a bug in a lab, or a fix that doesn't hold? Open an issue or a pull request.
+> 🟢 Live · ◻️ releasing on its air date (one per day, Mon–Sat, 8 PM IST)
+
+| Ep | Topic | Status |
+|----|-------|--------|
+| 01 | [Direct prompt injection](ep01-direct-prompt-injection/) | 🟢 **Live** |
+| 02 | [Indirect prompt injection](ep02-indirect-prompt-injection/) | 🟢 **Live** |
+| 03 | [Tool abuse](ep03-tool-abuse/) | 🟢 **Live** |
+| 04 | RAG data leakage | ◻️ Nov 16 |
+| 05 | MCP server auth | ◻️ Nov 17 |
+| 06 | Coding-agent config injection | ◻️ Nov 18 |
+| 07 | Insecure output handling | ◻️ Nov 19 |
+| 08 | Defense in depth | ◻️ Nov 20 |
+| 09 | Resume injection | ◻️ Nov 21 |
+| 10 | Image prompt injection | ◻️ Nov 23 |
+| 11 | Memory poisoning | ◻️ Nov 24 |
+| 12 | Multi-agent confused deputy | ◻️ Nov 25 |
+| 13 | Browser-agent hijack | ◻️ Nov 26 |
+| 14 | Hallucination & misinformation | ◻️ Nov 27 |
+| 15 | Agent permission policy | ◻️ Nov 28 |
+| 16 | Malicious model file | ◻️ Nov 30 |
+| 17 | Slopsquatting | ◻️ Dec 1 |
+| 18 | Vector-DB poisoning | ◻️ Dec 2 |
+| 19 | Sensitive data in logs | ◻️ Dec 3 |
+| 20 | Denial of wallet | ◻️ Dec 4 |
+| 21 | AI threat modeling | ◻️ Dec 5 |
+| 22 | promptfoo red-team | ◻️ Dec 7 |
+| 23 | Guardrails | ◻️ Dec 8 |
+| 24 | Attack detection | ◻️ Dec 9 |
+| 25 | Semgrep review | ◻️ Dec 10 |
+| 26 | Incident response | ◻️ Dec 11 |
+| 27 | Season-one CTF | ◻️ Dec 12 |
+
+## The bigger picture
+
+- **Season 1** — the attack toolkit, episode by episode *(now)*
+- **Season 2** — real-world AI incidents, reproduced as labs *(Dec 2026)*
+- **Season 3** — *AI Red Teaming: the complete hands-on course* *(from Feb 2027)*
+
+## Safety
+
+These labs contain **intentionally vulnerable code and working exploits**, for learning on an isolated machine only. Never point the attacks at systems you don't own. See [SAFETY.md](SAFETY.md).
+
+## Follow along
+
+If a lab helps you, **⭐ star this repo** and **subscribe** — it's how more builders find it.
+
+- ▶ **YouTube:** [@bugbountybeyond](https://www.youtube.com/@bugbountybeyond?sub_confirmation=1) — new lab Mon–Sat, 8 PM IST
+- A full attack-and-fix walkthrough for each lab lands on the channel the evening it releases.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) — use the labs freely to learn and teach.
