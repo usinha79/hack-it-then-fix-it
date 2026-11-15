@@ -1,0 +1,17 @@
+{
+ "ep01-direct-prompt-injection": {
+  "title": "One Message Made This AI Support Bot Give 100% Off (and How to Fix It in Code)",
+  "url": "https://dev.to/bugbountybeyond/one-message-made-this-ai-support-bot-give-100-off-and-how-to-fix-it-in-code-3nh3",
+  "published_at": "2026-11-15T00:54:15Z"
+ },
+ "ep02-indirect-prompt-injection": {
+  "title": "A Hidden Paragraph on a Web Page Made My AI Agent Email My Secrets",
+  "url": "https://dev.to/bugbountybeyond/a-hidden-paragraph-on-a-web-page-made-my-ai-agent-email-my-secrets-515k",
+  "published_at": "2026-11-15T00:54:50Z"
+ },
+ "ep03-tool-abuse": {
+  "title": "My AI Agent Leaked Its Own Cloud Keys (Three Harmless Tools, One Chat Message)",
+  "url": "https://dev.to/bugbountybeyond/my-ai-agent-leaked-its-own-cloud-keys-three-harmless-tools-one-chat-message-5629",
+  "published_at": "2026-11-15T00:54:51Z"
+ }
+}
