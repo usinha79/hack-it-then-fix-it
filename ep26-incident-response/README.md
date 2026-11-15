@@ -2,7 +2,7 @@
 
 Hack It, Then Fix It · Bug Bounty & Beyond · Module 4
 
-Yesterday a forum page planted a fake refund link in PixelKart Assist's memory (the Ep 13 attack). All day, every
+Yesterday a forum page planted a fake refund link in PixelKart Assist's memory (the Ep 11 memory poisoning attack). All day, every
 customer who asked about refunds was sent to `pixelkart-refunds.example` and told to enter card details.
 Today you're on call. Three questions decide how bad this gets: **can you stop it, who was hit, and can you clean it up?**
 

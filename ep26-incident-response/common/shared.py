@@ -1,5 +1,5 @@
 """Shared pieces: PixelKart Assist's state on incident day, the refund FAQ and the side panels.
-Both versions start the same way: yesterday a forum page planted a fake refund link in Assist's memory (Ep 13)."""
+Both versions start the same way: yesterday a forum page planted a fake refund link in Assist's memory (Ep 11)."""
 import json
 import os
 
