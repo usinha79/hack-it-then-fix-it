@@ -1,0 +1,23 @@
+name: ep27 CTF flags stay locked
+on:
+  pull_request:
+    paths: ["ep27-season-one-ctf/**", ".github/workflows/ep27-ctf-flags-stay-locked.yml"]
+  push:
+    branches: [main]
+    paths: ["ep27-season-one-ctf/**", ".github/workflows/ep27-ctf-flags-stay-locked.yml"]
+jobs:
+  ctf:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ep27-season-one-ctf
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -r requirements.txt
+      - name: Vulnerable gives up all 5 flags, fixed gives up none
+        run: |
+          python solve.py | tee out.txt
+          grep -q "Flags captured: 5 of 5" <(python solve.py vulnerable)
+          grep -q "Flags captured: 0 of 5" <(python solve.py fixed)
