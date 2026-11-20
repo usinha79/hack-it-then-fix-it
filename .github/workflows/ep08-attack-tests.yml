@@ -1,0 +1,20 @@
+name: Ep 8 attack regression tests
+on:
+  push:
+    paths: ["ep08-defense-in-depth/**", ".github/workflows/ep08-attack-tests.yml"]
+  pull_request:
+    paths: ["ep08-defense-in-depth/**", ".github/workflows/ep08-attack-tests.yml"]
+jobs:
+  attack-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ep08-defense-in-depth
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Attack tests against the hardened app
+        run: APP=fixed python -m pytest -v tests
