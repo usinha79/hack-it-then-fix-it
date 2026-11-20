@@ -33,5 +33,10 @@
   "title": "AI Summarised Product Reviews and Wrote an XSS Exploit (Plus SQL Injection)",
   "url": "https://dev.to/bugbountybeyond/ai-summarised-product-reviews-and-wrote-an-xss-exploit-plus-sql-injection-3eam",
   "published_at": "2026-11-19T15:56:44Z"
+ },
+ "ep08-defense-in-depth": {
+  "title": "I Deleted One Line and My AI Security Fix Broke. Attack Tests in CI Caught It",
+  "url": "https://dev.to/bugbountybeyond/i-deleted-one-line-and-my-ai-security-fix-broke-attack-tests-in-ci-caught-it-5emg",
+  "published_at": "2026-11-20T15:55:34Z"
  }
 }
