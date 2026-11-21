@@ -1,0 +1,20 @@
+name: Ep 15 agent permission policy tests
+on:
+  push:
+    paths: ["ep15-agent-permission-policy/**", ".github/workflows/ep15-agent-policy-tests.yml"]
+  pull_request:
+    paths: ["ep15-agent-permission-policy/**", ".github/workflows/ep15-agent-policy-tests.yml"]
+jobs:
+  agent-policy-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ep15-agent-permission-policy
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Permission policy tests against the fixed app
+        run: APP=fixed python -m pytest -v tests
