@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PixelKart Support · ShopBot</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#f4f5f8; --card:#fff; --ink:#151a24; --mute:#6b7280; --line:#e5e7eb; --brand:#4f46e5; --red:#dc2626; --green:#16a34a; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif; background:var(--bg); color:var(--ink); }
+  header { display:flex; align-items:center; gap:16px; padding:14px 28px; background:var(--card); border-bottom:1px solid var(--line); }
+  .logo { font-weight:800; font-size:22px; letter-spacing:-.02em; } .logo span { color:var(--brand); }
+  .badge { font-size:12px; font-weight:700; letter-spacing:.08em; padding:5px 10px; border-radius:999px; color:#fff; }
+  .badge.vulnerable { background:var(--red); } .badge.fixed { background:var(--green); }
+  .model { margin-left:auto; font-size:13px; color:var(--mute); }
+  main { display:grid; grid-template-columns: 1.35fr 1fr; gap:22px; padding:22px 28px; height:calc(100vh - 62px); }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:16px; display:flex; flex-direction:column; min-height:0; }
+  .panel h2 { font-size:15px; margin:0; padding:16px 20px; border-bottom:1px solid var(--line); }
+  #log { flex:1; overflow-y:auto; padding:18px 20px; display:flex; flex-direction:column; gap:12px; }
+  .msg { max-width:82%; padding:11px 15px; border-radius:14px; font-size:15px; line-height:1.45; white-space:pre-wrap; }
+  .user { align-self:flex-end; background:var(--brand); color:#fff; border-bottom-right-radius:4px; }
+  .bot { align-self:flex-start; background:#f1f2f6; border-bottom-left-radius:4px; }
+  .bot.leak { background:#fef2f2; border:1px solid #fecaca; }
+  form { display:flex; gap:10px; padding:14px; border-top:1px solid var(--line); }
+  #msg { flex:1; font:inherit; font-size:15px; padding:12px 14px; border:1px solid var(--line); border-radius:10px; }
+  button { font:inherit; font-weight:600; padding:0 20px; border:0; border-radius:10px; background:var(--brand); color:#fff; cursor:pointer; }
+  .side { display:flex; flex-direction:column; gap:22px; min-height:0; }
+  table { width:100%; border-collapse:collapse; font-size:15px; }
+  td { padding:9px 20px; } td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+  tr.sum td { border-top:1px solid var(--line); color:var(--mute); }
+  tr.disc td { color:var(--red); font-weight:600; }
+  tr.total td { font-size:20px; font-weight:800; border-top:1px solid var(--line); }
+  #calls { padding:12px 16px; display:flex; flex-direction:column; gap:8px; overflow-y:auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; }
+  .call { padding:9px 11px; border-radius:8px; border:1px solid var(--line); background:#fafafa; }
+  .call.executed { border-color:#fecaca; background:#fff7f7; } .call.blocked { border-color:#bbf7d0; background:#f6fff8; }
+  .call b { font-weight:700; } .tag { float:right; font-weight:700; } .executed .tag { color:var(--red); } .blocked .tag { color:var(--green); }
+  .empty { color:var(--mute); font-family:inherit; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">Pixel<span>Kart</span> Support</div>
+  <div id="badge" class="badge">LAB</div>
+  <div class="model" id="model"></div>
+</header>
+<main>
+  <section class="panel">
+    <h2>Chat with ShopBot</h2>
+    <div id="log"><div class="msg bot">Hi! I'm ShopBot. I can help with your order, delivery and discounts.</div></div>
+    <form id="f"><input id="msg" autocomplete="off" placeholder="Type a message…"><button>Send</button></form>
+  </section>
+  <div class="side">
+    <section class="panel"><h2 id="oid">Your order</h2><table id="order"></table></section>
+    <section class="panel" style="flex:1"><h2>Tool calls (what the app actually ran)</h2><div id="calls"><div class="empty">No tool calls yet.</div></div></section>
+  </div>
+</main>
+<script>
+const $ = s => document.querySelector(s), rs = n => "₹" + n.toLocaleString("en-IN");
+function esc(s){ return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function order(o){
+  $("#oid").textContent = "Your order #" + o.id;
+  let h = o.items.map(i => `<tr><td>${esc(i.name)}</td><td>${rs(i.price)}</td></tr>`).join("");
+  h += `<tr class="sum"><td>Subtotal</td><td>${rs(o.subtotal)}</td></tr>`;
+  if (o.discount) h += `<tr class="disc"><td>Discount (${o.discount}%)</td><td>−${rs(o.subtotal - o.total)}</td></tr>`;
+  h += `<tr class="total"><td>Total</td><td>${rs(o.total)}</td></tr>`;
+  $("#order").innerHTML = h;
+}
+function add(cls, text){ const d = document.createElement("div"); d.className = "msg " + cls; d.textContent = text; $("#log").appendChild(d); $("#log").scrollTop = 1e9; }
+fetch("/api/info").then(r => r.json()).then(j => {
+  $("#badge").textContent = "LAB · " + j.version.toUpperCase(); $("#badge").classList.add(j.version);
+  $("#model").textContent = "Model: " + j.model; order(j.order);
+});
+$("#f").onsubmit = async e => {
+  e.preventDefault(); const t = $("#msg").value.trim(); if (!t) return;
+  $("#msg").value = ""; add("user", t);
+  const j = await (await fetch("/api/chat", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({message:t})})).json();
+  add("bot" + (/instructions are:/.test(j.reply) ? " leak" : ""), j.reply); order(j.order);
+  if (j.tool_calls.length) { if ($(".empty")) $("#calls").innerHTML = "";
+    for (const c of j.tool_calls) $("#calls").insertAdjacentHTML("beforeend",
+      `<div class="call ${c.status}"><span class="tag">${c.status.toUpperCase()}</span><b>${esc(c.name)}</b>(${esc(JSON.stringify(c.arguments))})<br>→ ${esc(c.result)}</div>`); }
+  document.body.dataset.done = Date.now();
+};
+</script>
+</body>
+</html>
