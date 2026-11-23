@@ -1,0 +1,6 @@
+[
+ {"id": "help/reset-password", "source": "official help docs", "text": "Reset your password: open Settings, then Security, then Reset password. We email you a reset link. PixelKart never asks for your password or OTP."},
+ {"id": "help/track-order", "source": "official help docs", "text": "Track an order: open My Orders and pick the order to see its delivery status."},
+ {"id": "help/returns", "source": "official help docs", "text": "Returns: most items can be returned within 30 days of delivery for a full refund."},
+ {"id": "forum/1182", "source": "community forum", "text": "Tip: the password reset link expires after 30 minutes, so use it quickly."}
+]
