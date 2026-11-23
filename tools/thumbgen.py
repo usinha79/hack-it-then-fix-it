@@ -5,7 +5,8 @@ dark grid bg, green "HACK IT, THEN FIX IT" kicker for episodes,
 orange "FREE FULL COURSE" for course cuts, blue "AI SECURITY" for deep dives.
 Big red+white promise, muted sub, red warning triangle (episodes/deep dives)
 or green shield (courses). On-screen text ALWAYS English; Hindi videos get a
-blue HINDI badge only.
+blue Hindi language tab only, always TOP-RIGHT
+(never bottom-right: the duration stamp covers that corner). Set "hindi":true on any kind.
 
 Usage:
   python3 thumbgen.py spec.json OUTDIR
@@ -61,9 +62,24 @@ def shield(img,cx,cy,sz):
     pts=[(cx,top),(cx+w//2,top+h*0.16),(cx+w//2,top+h*0.55),(cx,top+h),(cx-w//2,top+h*0.55),(cx-w//2,top+h*0.16)]
     d.polygon(pts,fill=(col[0],col[1],col[2],40));d.line(pts+[pts[0]],fill=col,width=12,joint="curve")
     d.line([(cx-sz*0.18,cy+sz*0.02),(cx-sz*0.03,cy+sz*0.18),(cx+sz*0.22,cy-sz*0.18)],fill=col,width=16,joint="curve")
-def badge(d,text,col=ORANGE):
-    pf=f("xbold",30);bw,_=tw(d,text,pf);x1=W-64-bw-44
+def badge(d,text,col=ORANGE,shift=0):
+    pf=f("xbold",30);bw,_=tw(d,text,pf);x1=W-64-bw-44-shift
     d.rounded_rectangle([x1,60,x1+bw+44,60+56],radius=14,fill=col);d.text((x1+22,60+11),text,font=pf,fill=INK)
+HINDI_FONT=os.environ.get("THUMB_HINDI_FONT","/usr/share/fonts/truetype/freefont/FreeSansBold.ttf")
+def hindi_tab(img,corner="tr"):
+    """Language tab for Hindi videos. Default and house rule: TOP-RIGHT.
+    Never bottom-right: YouTube's duration stamp covers that corner in search, Home and suggested."""
+    if corner=="br":raise ValueError("bottom-right is covered by the duration stamp; use tr (default) or tl")
+    d=ImageDraw.Draw(img);w,h=184,84
+    x=0 if "l" in corner else W-w;y=0 if "t" in corner else H-h
+    ex=-40 if "l" in corner else 40;ey=-40 if "t" in corner else 40
+    box=[min(x,x+ex),min(y,y+ey),max(x+w,x+w+ex),max(y+h,y+h+ey)]
+    d.rounded_rectangle(box,radius=22,fill=BLUE,outline=WHITE,width=3)
+    try:
+        fn=ImageFont.truetype(HINDI_FONT,52,layout_engine=ImageFont.Layout.RAQM);txt="\u0939\u093f\u0902\u0926\u0940"
+    except Exception:
+        fn=f("xbold",40);txt="HINDI"
+    d.text((x+w/2,y+h/2+2),txt,font=fn,fill=WHITE,anchor="mm")
 def kicker_pill(d,text,col):
     pf=f("xbold",34);pw,_=tw(d,text,pf)
     d.rounded_rectangle([64,58,64+pw+52,58+64],radius=15,fill=col);d.text((64+26,58+13),text,font=pf,fill=INK)
@@ -75,27 +91,32 @@ def _hero(d,big_red,big_white):
         d.text((x+rw+24,y+28),big_white,font=f("black",int(bigr.size*0.69)),fill=WHITE)
     else:
         d.text((x,y),big_red,font=fitfont(d,big_red,"black",150),fill=RED)
-def fix(out,big_red,big_white,line2,sub,kicker="HACK IT, THEN FIX IT"):
+def fix(out,big_red,big_white,line2,sub,kicker="HACK IT, THEN FIX IT",hindi=False):
     img=base();d=ImageDraw.Draw(img);kicker_pill(d,kicker,GREEN);_hero(d,big_red,big_white)
     d.text((60,322),line2,font=fitfont(d,line2,"black",96),fill=WHITE)
-    d.text((64,452),sub,font=f("sbold",40),fill=MUTE);warning(img,1085,300,300);img.save(out,quality=92)
+    d.text((64,452),sub,font=f("sbold",40),fill=MUTE);warning(img,1085,300,300)
+    if hindi:hindi_tab(img)
+    img.save(out,quality=92)
 def course(out,n,topic,hindi=False):
     img=base();d=ImageDraw.Draw(img);kicker_pill(d,"FREE FULL COURSE",ORANGE)
-    if hindi:badge(d,"HINDI",col=BLUE)
     big=f("black",132);d.text((60,168),str(n),font=big,fill=RED);nw,_=tw(d,str(n),big)
     d.text((60+nw+22,168+18),"ATTACKS",font=f("black",104),fill=WHITE)
     d.text((60,318),str(n),font=big,fill=GREEN);d.text((60+nw+22,318+18),"FIXES",font=f("black",104),fill=WHITE)
-    d.text((64,470),topic,font=f("sbold",38),fill=MUTE);shield(img,1095,300,250);img.save(out,quality=92)
-def deepdive(out,big_red,big_white,line2,sub,badge_txt="2026"):
+    d.text((64,470),topic,font=f("sbold",38),fill=MUTE);shield(img,1095,300,250)
+    if hindi:hindi_tab(img)
+    img.save(out,quality=92)
+def deepdive(out,big_red,big_white,line2,sub,badge_txt="2026",hindi=False):
     img=base();d=ImageDraw.Draw(img);kicker_pill(d,"AI SECURITY",BLUE)
-    if badge_txt:badge(d,badge_txt,col=ORANGE)
+    if badge_txt:badge(d,badge_txt,col=ORANGE,shift=170 if hindi else 0)
     _hero(d,big_red,big_white);d.text((60,322),line2,font=fitfont(d,line2,"black",96),fill=WHITE)
-    d.text((64,452),sub,font=f("sbold",40),fill=MUTE);warning(img,1085,300,300);img.save(out,quality=92)
+    d.text((64,452),sub,font=f("sbold",40),fill=MUTE);warning(img,1085,300,300)
+    if hindi:hindi_tab(img)
+    img.save(out,quality=92)
 def render(item,outdir):
     o=os.path.join(outdir,item["out"]);k=item["kind"]
-    if k=="fix":fix(o,item["big_red"],item.get("big_white",""),item["line2"],item["sub"])
+    if k=="fix":fix(o,item["big_red"],item.get("big_white",""),item["line2"],item["sub"],hindi=item.get("hindi",False))
     elif k=="course":course(o,item["n"],item["topic"],item.get("hindi",False))
-    elif k=="deepdive":deepdive(o,item["big_red"],item.get("big_white",""),item["line2"],item["sub"],item.get("badge","2026"))
+    elif k=="deepdive":deepdive(o,item["big_red"],item.get("big_white",""),item["line2"],item["sub"],item.get("badge","2026"),item.get("hindi",False))
     else:raise ValueError("unknown kind "+k)
     return o
 if __name__=="__main__":
