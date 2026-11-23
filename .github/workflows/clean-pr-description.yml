@@ -1,0 +1,46 @@
+name: Clean pull request description
+
+# Removes tool-generated footers ("Generated with [...](...)" lines and
+# session links) from pull request descriptions as soon as a PR is opened
+# or edited. It never checks out or runs code from the pull request: it
+# only reads the description through the API and writes it back cleaned.
+
+on:
+  pull_request_target:
+    types: [opened, edited, reopened]
+
+permissions:
+  pull-requests: write
+
+concurrency:
+  group: clean-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Remove generated footer from the description
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          gh api "repos/${REPO}/pulls/${PR_NUMBER}" --jq '.body // ""' > body.txt
+          python3 - <<'PY'
+          import json, re
+          body = open("body.txt", encoding="utf-8").read()
+          clean = re.sub(r"\n*(?:-{3,}[ \t]*\n+)?_?(?:\U0001F916[ \t]*)?Generated (?:with|by) \[[^\]\n]*\]\([^)\n]*\)_?[ \t]*", "\n", body)
+          clean = re.sub(r"\n*https://[a-z]+\.ai/code/session_\S+[ \t]*", "\n", clean)
+          clean = re.sub(r"(?:\n[ \t]*-{3,}[ \t]*)+\s*$", "", clean.rstrip()).rstrip()
+          if clean != body.rstrip():
+              json.dump({"body": clean}, open("patch.json", "w", encoding="utf-8"))
+          PY
+          if [ -f patch.json ]; then
+            gh api -X PATCH "repos/${REPO}/pulls/${PR_NUMBER}" --input patch.json --silent
+            echo "Description cleaned."
+          else
+            echo "Nothing to clean."
+          fi
