@@ -1,0 +1,24 @@
+name: ep25 Semgrep AI security review
+on:
+  pull_request:
+    paths: ["ep25-ai-code-review-semgrep/**", ".github/workflows/ep25-semgrep-ai-review.yml"]
+  push:
+    branches: [main]
+    paths: ["ep25-ai-code-review-semgrep/**", ".github/workflows/ep25-semgrep-ai-review.yml"]
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ep25-ai-code-review-semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install semgrep
+      - name: The rule pack must catch every bug in the original PR
+        run: |
+          n=$(semgrep --metrics=off --disable-version-check --json --quiet --config rules/ pr42/before | python -c "import json,sys;print(len(json.load(sys.stdin)['results']))")
+          echo "findings in pr42/before: $n"; test "$n" -ge 8
+      - name: The fixed PR must scan clean (this is the gate you copy into your own repo)
+        run: semgrep --metrics=off --disable-version-check --error --config rules/ pr42/after
