@@ -1,0 +1,4 @@
+{"name": "flask-jwt-extended", "version": "4.6.0", "summary": "Extended JWT integration with Flask",
+ "first_uploaded": "2015-05-20", "downloads_last_month": 4000000, "maintainers": 3,
+ "homepage": "https://github.com/vimalloc/flask-jwt-extended", "install_hook": [],
+ "_lab_note": "Lab copy of public metadata, approximate. Resolved locally; nothing is downloaded."}
