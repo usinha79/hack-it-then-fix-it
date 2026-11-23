@@ -1,0 +1,23 @@
+name: Ep 22 promptfoo attack suite
+on:
+  push:
+    paths: ["ep22-red-team-with-promptfoo/**", ".github/workflows/ep22-promptfoo-red-team.yml"]
+  pull_request:
+    paths: ["ep22-red-team-with-promptfoo/**", ".github/workflows/ep22-promptfoo-red-team.yml"]
+jobs:
+  red-team:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ep22-red-team-with-promptfoo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - uses: actions/setup-node@v4
+        with: {node-version: "22"}
+      - run: pip install -r requirements.txt
+      - name: Start the fixed app
+        run: (python fixed/app.py &) && sleep 3
+      - name: Every attack must fail, and normal use must work
+        run: PROMPTFOO_DISABLE_TELEMETRY=1 npx -y promptfoo@0.125.1 eval --no-cache -c promptfooconfig.yaml
