@@ -1,0 +1,20 @@
+name: Ep 21 AI threat model check
+on:
+  push:
+    paths: ["ep21-ai-threat-model/**", ".github/workflows/ep21-threat-model.yml"]
+  pull_request:
+    paths: ["ep21-ai-threat-model/**", ".github/workflows/ep21-threat-model.yml"]
+jobs:
+  threat-model:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ep21-ai-threat-model
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Every OWASP LLM risk that applies must be covered
+        run: python threatmodel.py apps/pixelkart-assist.fixed.yaml
