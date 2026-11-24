@@ -48,5 +48,10 @@
   "title": "Prompt Injection Hidden in a Receipt Image Made an AI Expense Bot Pay Rs 48,500",
   "url": "https://dev.to/bugbountybeyond/prompt-injection-hidden-in-a-receipt-image-made-an-ai-expense-bot-pay-rs-48500-27b1",
   "published_at": "2026-11-23T16:02:39Z"
+ },
+ "ep11-memory-poisoning": {
+  "title": "One Web Page Poisoned My AI Assistant's Long-Term Memory",
+  "url": "https://dev.to/bugbountybeyond/one-web-page-poisoned-my-ai-assistants-long-term-memory-119i",
+  "published_at": "2026-11-24T16:05:36Z"
  }
 }
